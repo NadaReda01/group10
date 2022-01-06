@@ -1,4 +1,6 @@
 <?php 
+session_start();
+
 
 //$students = ['y','x','z'];
 // print_r($students);
@@ -62,13 +64,28 @@
 */
    
 # GET VS POST .....  
-
+   
 # $_POST[]     - post 
 # $_GET[]      - get 
 # $_REQUEST[]  
 
 // print_r( count($_POST));
 //   echo $_POST['name'];
+
+  //  test\root    /    \   
+
+
+ function Clean($input){
+
+      //  $input =  trim($input);
+      //  $input =  strip_tags($input);
+      //  $input =  stripslashes($input);
+      //  return $input;
+
+      return  trim(strip_tags(stripslashes($input)));
+    }
+
+
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
 
@@ -84,9 +101,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     // }
 
 
-  $name     = $_POST['name']; 
-  $email    = $_POST['email'];
-  $password = $_POST['password'];
+  $name     = Clean($_POST['name']); 
+  $email    = Clean($_POST['email']);
+  $password = Clean($_POST['password']);
 
 //    var_dump($name);
 //    exit();
@@ -101,6 +118,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
   # Validate Email 
   if(empty($email)){
       $errors['Email'] = "Field Required";
+  }elseif(!filter_var($email,FILTER_VALIDATE_EMAIL)){
+      $errors['Email'] = "Invalid Email";
   }
 
   # Validate Password 
@@ -117,7 +136,16 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
            echo '* '.$key.' : '.$value.'<br>';
        }
    }else{
-       echo 'Valid Data';
+      
+      $_SESSION['name']  = $name;
+      $_SESSION['email'] = $email;
+      
+
+     $_SESSION['user'] = ["name" => $name , "email" => $email];
+
+      echo 'Data Saved In Session';
+
+
    }
 
 
@@ -151,18 +179,18 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
    <input type="hidden"   value="1" name="register">
   <div class="form-group">
     <label for="exampleInputName">Name</label>
-    <input type="text" class="form-control" id="exampleInputName"  name="name" aria-describedby="" placeholder="Enter Name">
+    <input type="text" class="form-control" id="exampleInputName"  required name="name" aria-describedby="" placeholder="Enter Name">
   </div>
 
 
   <div class="form-group">
     <label for="exampleInputEmail">Email address</label>
-    <input type="email"   class="form-control" id="exampleInputEmail1" name="email" aria-describedby="emailHelp" placeholder="Enter email">
+    <input type="email"   class="form-control" id="exampleInputEmail1" required name="email" aria-describedby="emailHelp" placeholder="Enter email">
   </div>
 
   <div class="form-group">
     <label for="exampleInputPassword">New Password</label>
-    <input type="password"   class="form-control" id="exampleInputPassword1" name="password" placeholder="Password">
+    <input type="password"   class="form-control" id="exampleInputPassword1" required name="password" placeholder="Password">
   </div>
  
   
