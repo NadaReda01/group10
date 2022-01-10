@@ -165,7 +165,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
    $file = fopen('test.txt',"a") or die('unable to open file');
 
-    $studentData = $name."|".$email."\n";
+   
+    $studentData = time().rand().'|'.$name."|".$email."\n";
     
     fwrite($file, $studentData);
 
