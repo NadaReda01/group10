@@ -1,6 +1,7 @@
 <?php
 
 require 'dbConnection.php';
+require 'checkLogin.php';
 require 'helpers.php';
 
 $id = $_GET['id'];

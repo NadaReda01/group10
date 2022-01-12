@@ -1,5 +1,6 @@
 <?php 
  require 'dbConnection.php';
+ require 'checkLogin.php';
 
  $sql     = "select * from users";
  $objData = mysqli_query($con,$sql);
@@ -51,6 +52,10 @@
 
           <?php 
           
+          echo 'Welcome , '.$_SESSION['user']['name'];
+
+
+
            # Dispaly Messages .... 
 
            if(isset($_SESSION['Message'])){
@@ -63,7 +68,7 @@
 
         </div>
 
-    <a href="create.php">+ Account</a> ||  <a href="">LogOut</a> 
+    <a href="create.php">+ Account</a> ||  <a href="logout.php">LogOut</a> 
 
         <table class='table table-hover table-responsive table-bordered'>
             <!-- creating our table heading -->
