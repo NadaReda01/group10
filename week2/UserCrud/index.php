@@ -1,15 +1,10 @@
 <?php 
  require 'dbConnection.php';
 
- $sql = "select * from users";
-
+ $sql     = "select * from users";
  $objData = mysqli_query($con,$sql);
 
-
 ?>
-
-
-
 
 
 
@@ -68,13 +63,7 @@
 
         </div>
 
-
-
     <a href="create.php">+ Account</a> ||  <a href="">LogOut</a> 
-
-        
-
-
 
         <table class='table table-hover table-responsive table-bordered'>
             <!-- creating our table heading -->

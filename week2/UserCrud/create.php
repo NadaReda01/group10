@@ -1,43 +1,42 @@
 <?php
 
 require 'dbConnection.php';
+require 'helpers.php';
 
-function Clean($input)
-{
-    return trim(strip_tags(stripslashes($input)));
-}
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = Clean($_POST['name']);
     $email = Clean($_POST['email']);
-    $password = Clean($_POST['password']);
+    $password = Clean($_POST['password']); 
 
     $errors = [];
 
     # Validate Name ...
-    if (empty($name)) {
+    if (!Validate($name,1)) {
         $errors['Name'] = 'Field Required';
     }
 
     # Validate Email
-    if (empty($email)) {
+    if (!Validate($email,1)) {
         $errors['Email'] = 'Field Required';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } elseif (!Validate($email,2)) {
         $errors['Email'] = 'Invalid Email';
     }
 
+
     # Validate Password
-    if (empty($password)) {
+    if (!Validate($password,1)) {
         $errors['Password'] = 'Field Required';
-    } elseif (strlen($password) < 6) {
+    } elseif (!Validate($password,3)) {
         $errors['Password'] = 'Length must be >= 6 chars';
     }
 
     if (count($errors) > 0) {
-        foreach ($errors as $key => $value) {
-            # code...
-            echo '* ' . $key . ' : ' . $value . '<br>';
-        }
+       
+        # Print Errors 
+        Errors($errors);
+
     } else {
         $password = md5($password);
 
@@ -90,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <div class="form-group">
                 <label for="exampleInputEmail">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" name="email"
+                <input type="text" class="form-control" id="exampleInputEmail1" name="email"
                     aria-describedby="emailHelp" placeholder="Enter email">
             </div>
 

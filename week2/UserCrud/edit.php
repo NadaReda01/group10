@@ -1,6 +1,7 @@
 <?php
 
 require 'dbConnection.php';
+require 'helpers.php';
 
 $id = $_GET['id'];
 
@@ -14,13 +15,10 @@ if (mysqli_num_rows($data) == 1) {
 } else {
     $Message = 'Invalid Id ';
     $_SESSION['Message'] = $Message;
-    header('Location: index.php');
+    header('Location: index.php'); 
 }
 
- function Clean($input){
 
-    return  trim(strip_tags(stripslashes($input)));
-  }
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
 
@@ -30,25 +28,23 @@ $email    = Clean($_POST['email']);
 
  $errors = [];
 
-# Validate Name ...
- if(empty($name)){
-    $errors['Name'] = "Field Required";
-}
+ # Validate Name ...
+ if (!Validate($name,1)) {
+        $errors['Name'] = 'Field Required';
+    }
 
-# Validate Email
-if(empty($email)){
-    $errors['Email'] = "Field Required";
-}elseif(!filter_var($email,FILTER_VALIDATE_EMAIL)){
-    $errors['Email'] = "Invalid Email";
-}
+    # Validate Email
+    if (!Validate($email,1)) {
+        $errors['Email'] = 'Field Required';
+    } elseif (!Validate($email,2)) {
+        $errors['Email'] = 'Invalid Email';
+    }
 
 
 
  if(count($errors) > 0){
-     foreach ($errors as $key => $value) {
-         # code...
-         echo '* '.$key.' : '.$value.'<br>';
-     }
+        # Print Errors 
+        Errors($errors);
  }else{
 
     $sql = "update users set name='$name' , email = '$email' where id  = $id"; 
