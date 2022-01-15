@@ -21,10 +21,20 @@ if (mysqli_num_rows($data) == 1) {
 
 
 
+# Fetch Department Data ..... 
+$sql = "select * from departments";
+$dep_op  = mysqli_query($con,$sql); 
+
+
+
+
 if($_SERVER['REQUEST_METHOD'] == "POST"){
 
 $name     = Clean($_POST['name']);
 $email    = Clean($_POST['email']);
+$dep_id   = $_POST['dep_id'];
+
+
 
 
  $errors = [];
@@ -42,13 +52,22 @@ $email    = Clean($_POST['email']);
     }
 
 
+   # Validate dep_id .... 
+   if (!Validate($dep_id,1)) {
+        $errors['Department'] = 'Field Required';
+    }elseif(!Validate($dep_id,4)){
+        $errors['Department'] = "Invalid Id";
+    }
+
+
+
 
  if(count($errors) > 0){
         # Print Errors 
         Errors($errors);
  }else{
 
-    $sql = "update users set name='$name' , email = '$email' where id  = $id"; 
+    $sql = "update users set name='$name' , email = '$email' , dep_id = $dep_id where id  = $id"; 
 
     $op  = mysqli_query($con,$sql);
 
@@ -101,6 +120,22 @@ $email    = Clean($_POST['email']);
                 <label for="exampleInputEmail">Email address</label>
                 <input type="email" class="form-control" id="exampleInputEmail1" name="email"
                     value="<?php echo $Userdata['email']; ?>" aria-describedby="emailHelp" placeholder="Enter email">
+            </div>
+
+
+            <div class="form-group">
+                <label for="exampleInputPassword">Department</label>
+                <select  class="form-control" id="exampleInputPassword1" name="dep_id">
+
+                  <?php 
+                       while($data = mysqli_fetch_assoc($dep_op)){
+                    ?>
+
+                        <option  value="<?php echo $data['id'];?>"  <?php if($data['id'] == $Userdata['dep_id']){ echo 'selected';} ?> ><?php echo $data['title'];?></option>
+
+                   <?php } ?> 
+
+            </select>    
             </div>
 
 

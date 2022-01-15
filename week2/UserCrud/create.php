@@ -4,11 +4,19 @@ require 'dbConnection.php';
 require 'helpers.php';
 
 
+# Fetch Department Data ..... 
+$sql = "select * from departments";
+$dep_op  = mysqli_query($con,$sql); 
+
+
+
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = Clean($_POST['name']);
     $email = Clean($_POST['email']);
     $password = Clean($_POST['password']); 
+    $dep_id   = $_POST['dep_id'];
 
     $errors = [];
 
@@ -32,6 +40,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['Password'] = 'Length must be >= 6 chars';
     }
 
+    
+     # Validate dep_id .... 
+     if (!Validate($dep_id,1)) {
+        $errors['Department'] = 'Field Required';
+    }elseif(!Validate($dep_id,4)){
+        $errors['Department'] = "Invalid Id";
+    }
+
+
+
+
     if (count($errors) > 0) {
        
         # Print Errors 
@@ -41,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $password = md5($password);
 
         # store data ......
-        $sql = "insert into users (name,email,password) values ('$name','$email','$password')";
+        $sql = "insert into users (name,email,password,dep_id) values ('$name','$email','$password',$dep_id)";
 
         $op = mysqli_query($con, $sql);
 
@@ -98,6 +117,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="password" class="form-control" id="exampleInputPassword1" name="password"
                     placeholder="Password">
             </div>
+
+
+
+            <div class="form-group">
+                <label for="exampleInputPassword">Department</label>
+                <select  class="form-control" id="exampleInputPassword1" name="dep_id">
+
+                  <?php 
+                       while($data = mysqli_fetch_assoc($dep_op)){
+                    ?>
+
+                        <option  value="<?php echo $data['id'];?>"><?php echo $data['title'];?></option>
+
+                   <?php } ?> 
+
+            </select>    
+            </div>
+
+
 
 
             <button type="submit" class="btn btn-primary">Submit</button>
