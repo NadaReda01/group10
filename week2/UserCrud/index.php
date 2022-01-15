@@ -2,7 +2,8 @@
  require 'dbConnection.php';
  require 'checkLogin.php';
 
- $sql     = "select * from users";
+ $sql     = "select users.* , departments.title , contactinfo.phone ,contactinfo.address  from users join departments on users.dep_id = departments.id
+             join contactinfo on contactinfo.student_id = users.id";
  $objData = mysqli_query($con,$sql);
 
 ?>
@@ -76,6 +77,9 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Department</th>
+                <th>Phone</th>
+                <th>Address</th>
                 <th>action</th>         
             </tr>
 
@@ -87,6 +91,10 @@
                  <td><?php echo $data['id'];?></td>
                  <td><?php echo $data['name'];?></td>
                  <td><?php echo $data['email'];?></td>
+                 <td><?php echo $data['title'];?></td>
+                 <td><?php echo $data['phone'];?></td>
+                 <td><?php echo $data['address'];?></td>
+                 
                  <td>
                  <a href='delete.php?id=<?php echo $data['id'];?>' class='btn btn-danger m-r-1em'>Delete</a>
                  <a href='edit.php?id=<?php echo $data['id'];?>' class='btn btn-primary m-r-1em'>Edit</a>           

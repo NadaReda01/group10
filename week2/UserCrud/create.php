@@ -17,7 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = Clean($_POST['email']);
     $password = Clean($_POST['password']); 
     $dep_id   = $_POST['dep_id'];
+    $phone    = Clean($_POST['phone']);
+    $address    = Clean($_POST['address']);
 
+
+  
     $errors = [];
 
     # Validate Name ...
@@ -50,6 +54,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
 
+     # Validate phone .... 
+     if (!Validate($phone,1)) {
+        $errors['Phone'] = 'Field Required';
+    } elseif (!Validate($phone,5)) {
+        $errors['phone'] = 'Length must be = 11  number';
+    }
+
+
+
+      # Validate Address ...
+      if (!Validate($address,1)) {
+        $errors['Address'] = 'Field Required';
+    }
+
+
 
     if (count($errors) > 0) {
        
@@ -65,7 +84,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $op = mysqli_query($con, $sql);
 
         if ($op) {
-            $Message = 'Raw Inserted';
+
+            # insert Contact Data .... 
+            $std_id = mysqli_insert_id($con);
+            $sql = "insert into contactinfo (phone,address,student_id) values ('$phone','$address',$std_id)";
+
+            $op = mysqli_query($con, $sql);
+
+            if($op){
+                $Message = 'Raw Inserted';
+
+            }else{
+                $Message = 'Error try Again : ' . mysqli_error($con);
+            }
         } else {
             $Message = 'Error try Again : ' . mysqli_error($con);
         }
@@ -136,6 +167,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
 
+            <div class="form-group">
+                <label for="exampleInputName">Phone</label>
+                <input type="text" class="form-control" id="exampleInputName" name="phone" aria-describedby=""
+                    placeholder="Enter phone">
+            </div>
+
+
+            <div class="form-group">
+                <label for="exampleInputName">address</label>
+                <input type="text" class="form-control" id="exampleInputName" name="address" aria-describedby=""
+                    placeholder="Enter Address">
+            </div>
 
 
             <button type="submit" class="btn btn-primary">Submit</button>

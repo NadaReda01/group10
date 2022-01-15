@@ -41,6 +41,15 @@ function Clean($input){
          } 
           break;    
 
+
+
+          case 5: 
+           #code .... 
+           if (strlen($input) != 11){
+               $status = false;
+           }  
+           break;  
+
      }
 
      return $status;
